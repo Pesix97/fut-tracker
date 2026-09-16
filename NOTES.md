@@ -31,18 +31,52 @@ Tutto lo storico è un unico oggetto in `localStorage` sotto la chiave
 - `ts`: timestamp, usato per l'ordine e per "annulla ultimo tap"
 
 Nessuna dipendenza esterna a parte i Google Fonts (Rajdhani + Inter) caricati via
-`<link>`. Nessuna chiamata di rete, nessun tracking.
+`<link>`. L'unica chiamata di rete è quella, opzionale, verso l'API di Claude
+per la lettura degli screenshot (vedi sotto) — nessun tracking, nessun'altra
+chiamata.
 
 **Limite noto e voluto:** essendo `localStorage`, i dati non si sincronizzano tra
 browser o dispositivi diversi. Va bene per un tabellone personale rapido; se in
 futuro servisse condividerlo (es. tra più membri del club) andrebbe ripensato
 con uno storage condiviso, che oggi non c'è.
 
-## Idea futura: lettura screenshot via Claude API
+## Confronto tra periodi
 
-Invece del tap manuale dopo ogni partita, si potrebbe caricare lo screenshot
-della schermata di fine match (EA mostra già W/D/L, risultato e modalità) e
-farlo leggere a un modello Claude via API per compilare automaticamente il tap.
-Non implementato: richiederebbe una chiamata di rete e quindi una chiave API da
-gestire, in un progetto che oggi è volutamente senza backend. Da valutare più
-avanti se il tap manuale diventa scomodo con volumi alti di partite.
+`renderComparison()` raggruppa le partite per `period` (settimana ISO per
+Rivals, venerdì di riferimento per FUT Champions — stesso campo già usato per
+le statistiche "correnti") e mostra fino alle ultime 12 righe, più recenti in
+cima, con la barra W/D/L e il periodo attuale evidenziato. Nessun nuovo campo
+dati: usa lo stesso schema già salvato in `localStorage`.
+
+## Lettura screenshot via Claude API — idea principale dell'app
+
+Pensata per l'uso da telefono, subito dopo la partita: tap su "📷 Leggi da
+screenshot" apre la fotocamera (o il file picker su desktop, non è bloccato ma
+il flusso è disegnato per il mobile), l'immagine viene inviata al modello
+`claude-haiku-4-5-20251001` con un prompt che chiede di rispondere solo con
+`VICTORY` / `DRAW` / `DEFEAT` / `UNKNOWN`, e il risultato viene proposto con un
+tap di conferma — mai inserito automaticamente senza controllo.
+
+**Chiamata diretta dal browser, senza backend.** La richiesta va da
+`fetch()` direttamente a `https://api.anthropic.com/v1/messages`, con l'header
+`anthropic-dangerous-direct-browser-access: true` che Anthropic richiede
+apposta per questo caso d'uso. La documentazione ufficiale sconsiglia le
+chiamate dirette da browser **in produzione multi-utente**, perché la chiave
+sarebbe visibile a chiunque ispezioni il traffico del sito. Qui la situazione è
+diversa: è un'app a singolo utente (solo Peppe), la chiave è quella personale
+dell'utente stesso, inserita e salvata solo nel suo `localStorage`, e non
+transita mai da un server terzo (nemmeno da me). Per questo caso — un file
+statico, un solo utilizzatore, nessun backend possibile su GitHub Pages — è il
+compromesso scelto consapevolmente, non una svista. Se in futuro l'app dovesse
+avere più utenti o girare su un dominio condiviso, andrebbe rivista con un vero
+backend/proxy che nasconda la chiave.
+
+**Perché niente conferma automatica silenziosa:** un modello vision può
+sbagliare lettura (schermata poco chiara, lingua diversa, foto storta). Il tap
+di conferma resta sempre un passaggio umano — lo screenshot velocizza
+l'inserimento, non lo sostituisce del tutto.
+
+**Costo:** a carico dell'utente sulla propria chiave Anthropic, non
+dell'app/del repository. `claude-haiku-4-5-20251001` è stato scelto perché è
+il modello vision più economico disponibile per un compito così semplice
+(classificazione in una parola).
