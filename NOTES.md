@@ -40,6 +40,15 @@ browser o dispositivi diversi. Va bene per un tabellone personale rapido; se in
 futuro servisse condividerlo (es. tra più membri del club) andrebbe ripensato
 con uno storage condiviso, che oggi non c'è.
 
+Questo stesso "limite" è anche il modo più semplice per avere un tracker
+**multi-utente senza backend** (chiesto il 16/09/2026, per uso con un amico):
+finché ognuno lo apre dal proprio telefono, lo stesso identico link va bene per
+più persone — ogni browser tiene il proprio `futTracker.v1` in `localStorage`,
+quindi gli storici non si mischiano mai, senza login né configurazione. Non
+serve nessuna modifica al codice. Diverso seria richiedere un confronto tra
+utenti diversi nello stesso posto: lì servirebbe uno storage condiviso online
+(non più solo locale) — non richiesto per ora.
+
 ## Confronto tra periodi
 
 `renderComparison()` raggruppa le partite per `period` (settimana ISO per

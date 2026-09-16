@@ -36,6 +36,13 @@ mezzanotte.
 dispositivo con cui li inserisci. Non c'è sincronizzazione tra telefono e PC, né
 backup automatico — vedi `NOTES.md` per il perché di questa scelta.
 
+**Uso multi-utente:** proprio perché i dati restano sul dispositivo, questo
+stesso link (`https://pesix97.github.io/fut-tracker/`) può essere usato da più
+persone senza alcun conflitto — ognuno lo apre dal proprio telefono e ha il
+proprio storico Rivals/FUT Champions, completamente separato da quello degli
+altri. Non serve login né configurazione: basta aprire il link su un altro
+telefono per avere un tracker "vuoto" e indipendente.
+
 ## Stato di avanzamento
 
 - [x] v1 — tracker base: tap V/P/S per Rivals e FUT Champions, storico giornaliero
