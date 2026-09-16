@@ -48,6 +48,8 @@ backup automatico — vedi `NOTES.md` per il perché di questa scelta.
 - [x] v3 — inserimento manuale delle statistiche di partita (form con punteggio
       + tabella completa), storico partite dettagliato con card cliccabili,
       giorno di gioco esteso fino alle 5:00
+- [x] restyling UI — tab a slider, card e modale animate, header sticky con
+      blur, transizioni fluide ovunque (nessun cambiamento di dati/funzioni)
 - [ ] prossimo passo: lettura automatica della tabella statistiche da uno
       screenshot della schermata "SUMMARY" di fine partita, per pre-compilare
       questo stesso form — vedi `NOTES.md` (in corso, verificata la fattibilità

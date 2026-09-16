@@ -103,6 +103,26 @@ sbagliato (storico giornaliero, settimana Rivals, weekend Champions). Aggiunta
 per calcolare `day` e `period`. Non tocca `ts` (resta il timestamp reale, usato
 solo per l'ordinamento).
 
+## Restyling UI (16/09/2026)
+
+Nessun cambiamento di dati o funzionalità: solo interfaccia. La UI era
+"rudimentale" (stati istantanei, nessuna transizione) — sistemato con:
+
+- **Tab a slider**: l'indicatore verde dietro "Rivals"/"FUT Champions" ora
+  scorre (misurato via `getBoundingClientRect`, non percentuali fisse) invece
+  di scattare da uno stato all'altro.
+- **Card partita dettagliata**: apertura/chiusura animata con la tecnica
+  `grid-template-rows: 0fr → 1fr` (transizione fluida di un'altezza
+  "automatica", cosa che un semplice `max-height` non permette in modo pulito).
+- **Modale "+ Aggiungi"**: non più mostra/nascondi istantaneo, ma
+  fade + slide-up con `backdrop-filter: blur()` dietro.
+- **Header sticky con blur** durante lo scroll, barre statistiche e barre di
+  confronto animate su `width`, micro-animazioni di ingresso per righe di
+  storico/card/confronto, focus visibile sugli input del form.
+
+Tutto CSS/poche righe JS di supporto (riposizionamento indicatore tab);
+nessuna modifica allo schema `localStorage` né alla logica di calcolo.
+
 ## In corso: lettura automatica da screenshot (calibrazione in attesa)
 
 Confermato con Peppe: ogni screenshot genera una partita **autosufficiente**
