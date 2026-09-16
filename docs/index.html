@@ -81,6 +81,21 @@
     font-weight:500;
     letter-spacing:0.3px;
   }
+  .top-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .icon-btn{
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    width:36px;height:36px;
+    border-radius:10px;
+    font-size:16px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .icon-btn:active{background:rgba(255,255,255,0.06);}
   .reset-btn{
     background:transparent;
     border:1px solid var(--border);
@@ -237,6 +252,58 @@
   }
   .undo-btn:active{background:rgba(255,255,255,0.05);}
 
+  .shot-row{
+    margin-top:14px;
+    padding-top:14px;
+    border-top:1px dashed var(--border);
+  }
+  .shot-input{display:none;}
+  .shot-btn{
+    width:100%;
+    background:rgba(230,195,104,0.1);
+    border:1px solid rgba(230,195,104,0.35);
+    color:var(--gold);
+    font-family:'Rajdhani',sans-serif;
+    font-weight:700;
+    font-size:14px;
+    letter-spacing:0.3px;
+    padding:12px;
+    border-radius:12px;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .shot-btn:active{background:rgba(230,195,104,0.18);}
+  .shot-status{margin-top:10px;}
+  .shot-loading, .shot-error, .shot-result{
+    font-size:12.5px;
+    padding:10px 12px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .shot-loading{background:rgba(255,255,255,0.04); color:var(--text-dim);}
+  .shot-error{background:rgba(255,92,114,0.1); color:#ffb3bd;}
+  .shot-result{background:rgba(0,255,133,0.08); color:var(--text);}
+  .shot-confirm{
+    background:var(--accent);
+    color:#06110a;
+    border:none;
+    font-weight:700;
+    font-size:12px;
+    padding:7px 12px;
+    border-radius:8px;
+  }
+  .shot-dismiss{
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    font-size:12px;
+    padding:7px 10px;
+    border-radius:8px;
+  }
+
   .history{
     display:flex;
     flex-direction:column;
@@ -282,35 +349,60 @@
   .pill.d{background:var(--draw); color:#3a2b00;}
   .pill.l{background:var(--loss); color:#fff;}
 
+  .cmp-row{
+    padding:10px 12px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--border);
+    border-radius:12px;
+  }
+  .cmp-row.current{
+    border-color:rgba(0,255,133,0.4);
+    background:rgba(0,255,133,0.05);
+  }
+  .cmp-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:6px;
+    font-size:12.5px;
+    font-weight:600;
+  }
+  .cmp-top em{
+    font-style:normal;
+    color:var(--accent);
+    font-size:10px;
+    font-weight:700;
+    text-transform:uppercase;
+    margin-left:6px;
+  }
+  .cmp-wr{
+    font-family:'Rajdhani',sans-serif;
+    font-weight:700;
+    font-size:15px;
+    color:var(--text);
+  }
+  .cmp-bar{
+    height:7px;
+    border-radius:5px;
+    background:rgba(255,255,255,0.06);
+    overflow:hidden;
+    display:flex;
+    margin-bottom:6px;
+  }
+  .cmp-bar div{height:100%;}
+  .cb-w{background:var(--win);}
+  .cb-d{background:var(--draw);}
+  .cb-l{background:var(--loss);}
+  .cmp-counts{
+    font-size:11px;
+    color:var(--text-dim);
+  }
+
   .empty{
     text-align:center;
     color:var(--text-dim);
     font-size:13px;
     padding:18px 0 6px;
-  }
-
-  .weekend-select{
-    display:flex;
-    gap:8px;
-    margin-bottom:14px;
-    overflow-x:auto;
-    padding-bottom:2px;
-  }
-  .weekend-chip{
-    flex:0 0 auto;
-    padding:8px 12px;
-    border-radius:20px;
-    background:rgba(255,255,255,0.04);
-    border:1px solid var(--border);
-    font-size:12px;
-    color:var(--text-dim);
-    white-space:nowrap;
-  }
-  .weekend-chip.active{
-    background:var(--gold);
-    color:#2b2004;
-    border-color:var(--gold);
-    font-weight:600;
   }
 
   footer.app-footer{
@@ -343,6 +435,79 @@
     opacity:1;
     transform:translateX(-50%) translateY(0);
   }
+
+  .modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(4,8,18,0.72);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:100;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-box{
+    width:100%;
+    max-width:400px;
+    background:linear-gradient(180deg,var(--card-2),var(--card));
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  }
+  .modal-box h2{
+    font-family:'Rajdhani',sans-serif;
+    font-size:18px;
+    margin:0 0 10px;
+  }
+  .modal-note{
+    font-size:12px;
+    color:var(--text-dim);
+    line-height:1.6;
+    margin:0 0 16px;
+  }
+  .modal-box label{
+    display:block;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:var(--text-dim);
+    margin-bottom:6px;
+  }
+  .modal-box input[type="password"], .modal-box input[type="text"]{
+    width:100%;
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:12px;
+    border-radius:10px;
+    font-size:14px;
+    margin-bottom:14px;
+  }
+  .modal-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .modal-actions button{
+    flex:1;
+    padding:11px;
+    border-radius:10px;
+    font-family:'Rajdhani',sans-serif;
+    font-weight:700;
+    font-size:13px;
+    border:none;
+  }
+  #apiKeySave{background:var(--accent); color:#06110a;}
+  #apiKeyClear{background:rgba(255,92,114,0.15); color:#ffb3bd;}
+  #settingsClose{background:rgba(255,255,255,0.06); color:var(--text-dim);}
+  .modal-hint{
+    font-size:11px;
+    color:var(--text-dim);
+    margin:14px 0 0;
+  }
+  .modal-hint span{color:var(--text);}
 </style>
 </head>
 <body>
@@ -356,7 +521,10 @@
         <small>Rivals &amp; FUT Champions</small>
       </div>
     </div>
-    <button class="reset-btn" id="resetBtn" type="button">↺ Reset</button>
+    <div class="top-actions">
+      <button class="icon-btn" id="settingsBtn" type="button" title="Impostazioni">⚙</button>
+      <button class="reset-btn" id="resetBtn" type="button">↺ Reset</button>
+    </div>
   </header>
 
   <div class="tabs">
@@ -390,6 +558,17 @@
       <div class="undo-row">
         <button class="undo-btn" data-undo="rivals" type="button">Annulla ultimo tap</button>
       </div>
+
+      <div class="shot-row">
+        <input type="file" accept="image/*" capture="environment" id="shotInput-rivals" class="shot-input" data-mode="rivals">
+        <button class="shot-btn" data-shot="rivals" type="button">📷 Leggi da screenshot</button>
+        <div class="shot-status" id="shotStatus-rivals"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Confronto settimane</p>
+      <div class="history" id="rivalsComparison"></div>
     </div>
 
     <div class="card">
@@ -424,6 +603,17 @@
       <div class="undo-row">
         <button class="undo-btn" data-undo="champions" type="button">Annulla ultimo tap</button>
       </div>
+
+      <div class="shot-row">
+        <input type="file" accept="image/*" capture="environment" id="shotInput-champions" class="shot-input" data-mode="champions">
+        <button class="shot-btn" data-shot="champions" type="button">📷 Leggi da screenshot</button>
+        <div class="shot-status" id="shotStatus-champions"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Confronto weekend</p>
+      <div class="history" id="champComparison"></div>
     </div>
 
     <div class="card">
@@ -434,16 +624,38 @@
 
   <footer class="app-footer">
     I dati restano <b>solo su questo browser/dispositivo</b> (localStorage) — non si sincronizzano altrove.
+    La lettura da screenshot invia l'immagine alla API di Claude con la tua chiave personale, salvata solo qui.
   </footer>
 </div>
 
 <div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-box">
+    <h2>Impostazioni</h2>
+    <p class="modal-note">
+      Per leggere i risultati dagli screenshot serve una tua chiave API Claude (Anthropic).
+      Resta salvata <b>solo su questo browser</b> (localStorage) e viene inviata soltanto ad
+      api.anthropic.com per analizzare l'immagine — mai altrove, mai a me.
+    </p>
+    <label for="apiKeyInput">Chiave API Claude</label>
+    <input type="password" id="apiKeyInput" placeholder="sk-ant-...">
+    <div class="modal-actions">
+      <button id="apiKeySave" type="button">Salva</button>
+      <button id="apiKeyClear" type="button">Rimuovi</button>
+      <button id="settingsClose" type="button">Chiudi</button>
+    </div>
+    <p class="modal-hint">Se non ne hai una, creala su <span>console.anthropic.com</span> → API Keys.</p>
+  </div>
+</div>
 
 <script>
 (function(){
   "use strict";
 
   var STORAGE_KEY = "futTracker.v1";
+  var API_KEY_STORAGE = "futTracker.apiKey";
+  var VISION_MODEL = "claude-haiku-4-5-20251001";
 
   /* ---------- storage ---------- */
   function loadData(){
@@ -460,6 +672,10 @@
   function saveData(data){
     try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
     catch(e){ showToast("Impossibile salvare (storage pieno o bloccato)"); }
+  }
+  function getApiKey(){
+    try{ return localStorage.getItem(API_KEY_STORAGE) || ""; }
+    catch(e){ return ""; }
   }
 
   var state = loadData();
@@ -487,15 +703,13 @@
   function weekendKey(d){
     var day = d.getDay(); // 0=domenica..6=sabato
     var ref = new Date(d);
-    // giorni da sottrarre per tornare al venerdì di riferimento (ven=5)
     var diff;
     if(day === 5) diff = 0;
     else if(day === 6) diff = 1;
     else if(day === 0) diff = 2;
-    else if(day === 1) diff = 3; // lunedì mattina conta ancora nel weekend appena chiuso
-    else diff = null; // mar/mer/gio -> nessun weekend attivo, si aggancia al prossimo venerdì
+    else if(day === 1) diff = 3;
+    else diff = null;
     if(diff === null){
-      // agganciato al venerdì successivo
       var addDays = (5 - day + 7) % 7;
       ref.setDate(ref.getDate() + addDays);
     } else {
@@ -509,6 +723,11 @@
     var d = new Date(parts[0], parts[1]-1, parts[2]);
     var giorni = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
     return d.getDate() + "/" + (d.getMonth()+1) + " · " + giorni[d.getDay()];
+  }
+
+  function fmtDateShort(key){
+    var p = key.split("-");
+    return parseInt(p[2],10) + "/" + parseInt(p[1],10);
   }
 
   function showToast(msg){
@@ -555,7 +774,7 @@
     showToast("Storico azzerato");
   }
 
-  /* ---------- render ---------- */
+  /* ---------- render: stats correnti ---------- */
   function computeStats(mode, period){
     var w=0,d=0,l=0;
     state.matches.forEach(function(m){
@@ -610,6 +829,51 @@
     }).join("");
   }
 
+  /* ---------- render: confronto tra periodi ---------- */
+  function isoWeekRangeLabel(periodKey, days){
+    var sorted = days.slice().sort();
+    var first = sorted[0], last = sorted[sorted.length-1];
+    var wk = periodKey.split("-W")[1];
+    if(first === last) return "W"+wk+" · " + fmtDateShort(first);
+    return "W"+wk+" · " + fmtDateShort(first) + "–" + fmtDateShort(last);
+  }
+
+  function renderComparison(containerId, mode, currentPeriod){
+    var container = document.getElementById(containerId);
+    var groups = {};
+    state.matches.forEach(function(m){
+      if(m.mode !== mode) return;
+      if(!groups[m.period]) groups[m.period] = { w:0, d:0, l:0, days:[] };
+      var g = groups[m.period];
+      if(m.result === "W") g.w++;
+      else if(m.result === "D") g.d++;
+      else g.l++;
+      g.days.push(m.day);
+    });
+    var periods = Object.keys(groups).sort().reverse();
+    if(periods.length === 0){
+      container.innerHTML = '<div class="empty">Ancora nessun dato da confrontare</div>';
+      return;
+    }
+    container.innerHTML = periods.slice(0,12).map(function(p){
+      var g = groups[p];
+      var tot = g.w + g.d + g.l;
+      var wr = tot ? Math.round(g.w/tot*100) : 0;
+      var label = mode === "rivals" ? isoWeekRangeLabel(p, g.days) : fmtDate(p);
+      var isCurrent = p === currentPeriod;
+      return '<div class="cmp-row'+(isCurrent ? ' current' : '')+'">' +
+        '<div class="cmp-top"><span>'+label+(isCurrent ? ' <em>in corso</em>' : '')+'</span>' +
+        '<span class="cmp-wr">'+wr+'%</span></div>' +
+        '<div class="cmp-bar">' +
+          '<div class="cb-w" style="width:'+(tot ? g.w/tot*100 : 0)+'%"></div>' +
+          '<div class="cb-d" style="width:'+(tot ? g.d/tot*100 : 0)+'%"></div>' +
+          '<div class="cb-l" style="width:'+(tot ? g.l/tot*100 : 0)+'%"></div>' +
+        '</div>' +
+        '<div class="cmp-counts">'+g.w+'V '+g.d+'P '+g.l+'S</div>' +
+      '</div>';
+    }).join("");
+  }
+
   function render(){
     var now = new Date();
     var rWeek = isoWeekKey(now);
@@ -623,6 +887,7 @@
     document.getElementById("rivalsD").textContent = rs.d;
     document.getElementById("rivalsL").textContent = rs.l;
     renderBar("rivalsBar", rs);
+    renderComparison("rivalsComparison", "rivals", rWeek);
     renderHistory("rivalsHistory", "rivals");
 
     var cs = computeStats("champions", cWeekend);
@@ -630,8 +895,111 @@
     document.getElementById("champD").textContent = cs.d;
     document.getElementById("champL").textContent = cs.l;
     renderBar("champBar", cs);
+    renderComparison("champComparison", "champions", cWeekend);
     renderHistory("champHistory", "champions");
   }
+
+  /* ---------- lettura screenshot via Claude API ---------- */
+  function fileToBase64(file){
+    return new Promise(function(resolve, reject){
+      var reader = new FileReader();
+      reader.onload = function(){
+        var result = reader.result;
+        var comma = result.indexOf(",");
+        resolve(result.slice(comma + 1));
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function analyzeScreenshot(mode, file){
+    var statusEl = document.getElementById("shotStatus-" + mode);
+    var key = getApiKey();
+    if(!key){
+      statusEl.innerHTML = '<div class="shot-error"><span>Serve prima una chiave API — apri ⚙ Impostazioni.</span></div>';
+      return;
+    }
+    statusEl.innerHTML = '<div class="shot-loading"><span>Analisi screenshot in corso…</span></div>';
+
+    fileToBase64(file).then(function(b64){
+      var mediaType = file.type || "image/jpeg";
+      return fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-api-key": key,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true"
+        },
+        body: JSON.stringify({
+          model: VISION_MODEL,
+          max_tokens: 10,
+          messages: [{
+            role: "user",
+            content: [
+              { type: "image", source: { type: "base64", media_type: mediaType, data: b64 } },
+              { type: "text", text: "Questo è uno screenshot di fine partita di EA Sports FC Ultimate Team (modalità Rivals o FUT Champions). Rispondi con una sola parola esatta tra: VICTORY, DRAW, DEFEAT, UNKNOWN (usa UNKNOWN se l'immagine non è leggibile o non è una schermata di fine partita)." }
+            ]
+          }]
+        })
+      });
+    }).then(function(res){
+      if(!res.ok){
+        throw new Error("richiesta fallita (" + res.status + ")");
+      }
+      return res.json();
+    }).then(function(data){
+      var text = ((data.content && data.content[0] && data.content[0].text) || "").trim().toUpperCase();
+      var map = { VICTORY: "W", DRAW: "D", DEFEAT: "L" };
+      var result = map[text];
+      if(!result){
+        statusEl.innerHTML = '<div class="shot-error"><span>Non riconosciuto. Registra a mano o riprova con uno screenshot più chiaro.</span></div>';
+        return;
+      }
+      var labelMap = { W: "Vittoria", D: "Pareggio", L: "Sconfitta" };
+      statusEl.innerHTML =
+        '<div class="shot-result"><span>Rilevato: <b>' + labelMap[result] + '</b></span>' +
+        '<span style="display:flex;gap:6px;">' +
+        '<button class="shot-confirm" data-mode="' + mode + '" data-result="' + result + '" type="button">✓ Conferma</button>' +
+        '<button class="shot-dismiss" data-mode="' + mode + '" type="button">✕</button>' +
+        '</span></div>';
+    }).catch(function(err){
+      statusEl.innerHTML = '<div class="shot-error"><span>Errore nella lettura (' + err.message + '). Registra a mano o riprova.</span></div>';
+    });
+  }
+
+  /* ---------- impostazioni / chiave API ---------- */
+  var settingsModal = document.getElementById("settingsModal");
+  var apiKeyInput = document.getElementById("apiKeyInput");
+
+  function openSettings(){
+    apiKeyInput.value = "";
+    apiKeyInput.placeholder = getApiKey() ? "•••• chiave già salvata, incolla per sostituirla" : "sk-ant-...";
+    settingsModal.classList.add("show");
+  }
+  function closeSettings(){
+    settingsModal.classList.remove("show");
+  }
+
+  document.getElementById("settingsBtn").addEventListener("click", openSettings);
+  document.getElementById("settingsClose").addEventListener("click", closeSettings);
+  settingsModal.addEventListener("click", function(e){
+    if(e.target === settingsModal) closeSettings();
+  });
+  document.getElementById("apiKeySave").addEventListener("click", function(){
+    var v = apiKeyInput.value.trim();
+    if(!v){ showToast("Inserisci una chiave valida"); return; }
+    try{ localStorage.setItem(API_KEY_STORAGE, v); }catch(e){}
+    closeSettings();
+    showToast("Chiave salvata");
+  });
+  document.getElementById("apiKeyClear").addEventListener("click", function(){
+    try{ localStorage.removeItem(API_KEY_STORAGE); }catch(e){}
+    apiKeyInput.value = "";
+    apiKeyInput.placeholder = "sk-ant-...";
+    showToast("Chiave rimossa");
+  });
 
   /* ---------- events ---------- */
   document.querySelectorAll(".tap-btn").forEach(function(btn){
@@ -658,6 +1026,35 @@
   document.getElementById("resetBtn").addEventListener("click", function(){
     if(window.confirm("Azzerare tutto lo storico salvato su questo dispositivo? L'operazione non è reversibile.")){
       resetAll();
+    }
+  });
+
+  document.querySelectorAll(".shot-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var mode = btn.getAttribute("data-shot");
+      document.getElementById("shotInput-" + mode).click();
+    });
+  });
+  document.querySelectorAll(".shot-input").forEach(function(inp){
+    inp.addEventListener("change", function(){
+      var mode = inp.getAttribute("data-mode");
+      var file = inp.files && inp.files[0];
+      inp.value = "";
+      if(file) analyzeScreenshot(mode, file);
+    });
+  });
+
+  document.addEventListener("click", function(e){
+    var confirmBtn = e.target.closest(".shot-confirm");
+    if(confirmBtn){
+      var m = confirmBtn.getAttribute("data-mode");
+      addMatch(m, confirmBtn.getAttribute("data-result"));
+      document.getElementById("shotStatus-" + m).innerHTML = "";
+      return;
+    }
+    var dismissBtn = e.target.closest(".shot-dismiss");
+    if(dismissBtn){
+      document.getElementById("shotStatus-" + dismissBtn.getAttribute("data-mode")).innerHTML = "";
     }
   });
 
