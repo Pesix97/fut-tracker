@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>FUT Tracker</title>
+<meta name="description" content="Tabellone risultati per il club Ultimate Team — Rivals e FUT Champions">
+<meta name="theme-color" content="#0b1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FUT Tracker">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2300ff85'/%3E%3Ctext x='32' y='42' font-size='30' font-family='Arial' font-weight='900' text-anchor='middle' fill='%230b1220'%3EFT%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2300ff85'/%3E%3Ctext x='32' y='42' font-size='30' font-family='Arial' font-weight='900' text-anchor='middle' fill='%230b1220'%3EFT%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b1220;
+    --bg-2:#0f1830;
+    --card:#141f3d;
+    --card-2:#182448;
+    --border:rgba(255,255,255,0.08);
+    --text:#eef2ff;
+    --text-dim:#8d97b8;
+    --accent:#00ff85;
+    --accent-dim:#00c96a;
+    --gold:#e6c368;
+    --win:#00ff85;
+    --draw:#ffd166;
+    --loss:#ff5c72;
+    --radius:16px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:'Inter',system-ui,sans-serif;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #1b2a56 0%, transparent 60%),
+      linear-gradient(180deg,var(--bg) 0%, #070c18 100%);
+    color:var(--text);
+    min-height:100vh;
+    padding-bottom:40px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:520px;
+    margin:0 auto;
+    padding:20px 16px 8px;
+  }
+  header.top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:18px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand .logo{
+    width:38px;height:38px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-dim));
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Rajdhani',sans-serif;font-weight:700;color:#06110a;font-size:15px;
+    box-shadow:0 6px 18px rgba(0,255,133,0.25);
+  }
+  .brand h1{
+    font-family:'Rajdhani',sans-serif;
+    font-size:20px;
+    letter-spacing:0.5px;
+    margin:0;
+    font-weight:700;
+  }
+  .brand small{
+    display:block;
+    color:var(--text-dim);
+    font-size:11px;
+    font-weight:500;
+    letter-spacing:0.3px;
+  }
+  .reset-btn{
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    font-size:12px;
+    padding:8px 12px;
+    border-radius:10px;
+    display:flex;align-items:center;gap:6px;
+  }
+  .reset-btn:active{background:rgba(255,255,255,0.06);}
+
+  .tabs{
+    display:flex;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:4px;
+    margin-bottom:18px;
+    gap:4px;
+  }
+  .tab{
+    flex:1;
+    text-align:center;
+    padding:11px 8px;
+    border-radius:10px;
+    font-family:'Rajdhani',sans-serif;
+    font-weight:700;
+    font-size:14px;
+    letter-spacing:0.4px;
+    color:var(--text-dim);
+    transition:background .15s, color .15s;
+    user-select:none;
+  }
+  .tab.active{
+    background:linear-gradient(135deg,var(--accent),var(--accent-dim));
+    color:#06110a;
+  }
+
+  .panel{display:none;}
+  .panel.active{display:block; animation:fade .18s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(4px)} to{opacity:1; transform:translateY(0)}}
+
+  .card{
+    background:linear-gradient(180deg,var(--card-2),var(--card));
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px;
+    margin-bottom:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+  }
+  .card-title{
+    font-family:'Rajdhani',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--text-dim);
+    margin:0 0 14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .card-title span.badge{
+    background:rgba(255,255,255,0.06);
+    color:var(--text);
+    padding:3px 9px;
+    border-radius:20px;
+    font-size:11px;
+    text-transform:none;
+    letter-spacing:0;
+  }
+
+  .stat-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .stat{
+    flex:1;
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:12px 8px;
+    text-align:center;
+  }
+  .stat .num{
+    font-family:'Rajdhani',sans-serif;
+    font-size:26px;
+    font-weight:700;
+    line-height:1;
+  }
+  .stat .lbl{
+    font-size:10px;
+    color:var(--text-dim);
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+    margin-top:4px;
+  }
+  .stat.win .num{color:var(--win);}
+  .stat.draw .num{color:var(--draw);}
+  .stat.loss .num{color:var(--loss);}
+
+  .winrate-bar{
+    height:8px;
+    border-radius:6px;
+    background:rgba(255,255,255,0.06);
+    overflow:hidden;
+    display:flex;
+    margin-bottom:18px;
+  }
+  .winrate-bar div{height:100%;}
+  .wr-win{background:var(--win);}
+  .wr-draw{background:var(--draw);}
+  .wr-loss{background:var(--loss);}
+
+  .tap-row{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+  }
+  .tap-btn{
+    border:none;
+    border-radius:14px;
+    padding:20px 6px;
+    font-family:'Rajdhani',sans-serif;
+    font-weight:700;
+    font-size:16px;
+    letter-spacing:0.5px;
+    color:#06110a;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    transition:transform .08s ease, filter .1s;
+  }
+  .tap-btn:active{transform:scale(0.94); filter:brightness(0.92);}
+  .tap-btn .ic{font-size:20px;}
+  .tap-win{background:linear-gradient(135deg,#00ff85,#00c96a);}
+  .tap-draw{background:linear-gradient(135deg,#ffe08a,#ffc94d); color:#3a2b00;}
+  .tap-loss{background:linear-gradient(135deg,#ff8a97,#ff5c72); color:#3a0009;}
+
+  .undo-row{
+    display:flex;
+    justify-content:center;
+    margin-top:12px;
+  }
+  .undo-btn{
+    background:transparent;
+    border:1px dashed var(--border);
+    color:var(--text-dim);
+    font-size:12px;
+    padding:8px 14px;
+    border-radius:10px;
+  }
+  .undo-btn:active{background:rgba(255,255,255,0.05);}
+
+  .history{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .history .day{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 12px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--border);
+    border-radius:12px;
+  }
+  .history .day .date{
+    font-size:13px;
+    font-weight:600;
+    color:var(--text);
+  }
+  .history .day .date small{
+    display:block;
+    font-weight:400;
+    color:var(--text-dim);
+    font-size:10.5px;
+    margin-top:1px;
+  }
+  .history .pills{
+    display:flex;
+    gap:4px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+    max-width:60%;
+  }
+  .pill{
+    width:22px;height:22px;
+    border-radius:6px;
+    font-size:10.5px;
+    font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    color:#06110a;
+  }
+  .pill.w{background:var(--win);}
+  .pill.d{background:var(--draw); color:#3a2b00;}
+  .pill.l{background:var(--loss); color:#fff;}
+
+  .empty{
+    text-align:center;
+    color:var(--text-dim);
+    font-size:13px;
+    padding:18px 0 6px;
+  }
+
+  .weekend-select{
+    display:flex;
+    gap:8px;
+    margin-bottom:14px;
+    overflow-x:auto;
+    padding-bottom:2px;
+  }
+  .weekend-chip{
+    flex:0 0 auto;
+    padding:8px 12px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--border);
+    font-size:12px;
+    color:var(--text-dim);
+    white-space:nowrap;
+  }
+  .weekend-chip.active{
+    background:var(--gold);
+    color:#2b2004;
+    border-color:var(--gold);
+    font-weight:600;
+  }
+
+  footer.app-footer{
+    text-align:center;
+    color:var(--text-dim);
+    font-size:11px;
+    padding:20px 16px 4px;
+    line-height:1.6;
+  }
+  footer.app-footer b{color:var(--text);}
+
+  .toast{
+    position:fixed;
+    left:50%;
+    bottom:24px;
+    transform:translateX(-50%) translateY(20px);
+    background:#101a34;
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:10px 16px;
+    border-radius:12px;
+    font-size:12.5px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s, transform .2s;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    z-index:50;
+  }
+  .toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <div class="logo">FT</div>
+      <div>
+        <h1>FUT Tracker</h1>
+        <small>Rivals &amp; FUT Champions</small>
+      </div>
+    </div>
+    <button class="reset-btn" id="resetBtn" type="button">↺ Reset</button>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-mode="rivals">Rivals</div>
+    <div class="tab" data-mode="champions">FUT Champions</div>
+  </div>
+
+  <!-- RIVALS -->
+  <section class="panel active" id="panel-rivals">
+    <div class="card">
+      <p class="card-title">Settimana corrente <span class="badge" id="rivalsWeekLabel">—</span></p>
+
+      <div class="stat-row">
+        <div class="stat win"><div class="num" id="rivalsW">0</div><div class="lbl">Vittorie</div></div>
+        <div class="stat draw"><div class="num" id="rivalsD">0</div><div class="lbl">Pareggi</div></div>
+        <div class="stat loss"><div class="num" id="rivalsL">0</div><div class="lbl">Sconfitte</div></div>
+      </div>
+
+      <div class="winrate-bar" id="rivalsBar">
+        <div class="wr-win" style="width:0%"></div>
+        <div class="wr-draw" style="width:0%"></div>
+        <div class="wr-loss" style="width:0%"></div>
+      </div>
+
+      <div class="tap-row">
+        <button class="tap-btn tap-win" data-mode="rivals" data-result="W"><span class="ic">✓</span>Vittoria</button>
+        <button class="tap-btn tap-draw" data-mode="rivals" data-result="D"><span class="ic">=</span>Pareggio</button>
+        <button class="tap-btn tap-loss" data-mode="rivals" data-result="L"><span class="ic">✕</span>Sconfitta</button>
+      </div>
+
+      <div class="undo-row">
+        <button class="undo-btn" data-undo="rivals" type="button">Annulla ultimo tap</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Storico giornaliero</p>
+      <div class="history" id="rivalsHistory"></div>
+    </div>
+  </section>
+
+  <!-- CHAMPIONS -->
+  <section class="panel" id="panel-champions">
+    <div class="card">
+      <p class="card-title">Weekend League <span class="badge" id="champWeekendLabel">—</span></p>
+
+      <div class="stat-row">
+        <div class="stat win"><div class="num" id="champW">0</div><div class="lbl">Vittorie</div></div>
+        <div class="stat draw"><div class="num" id="champD">0</div><div class="lbl">Pareggi</div></div>
+        <div class="stat loss"><div class="num" id="champL">0</div><div class="lbl">Sconfitte</div></div>
+      </div>
+
+      <div class="winrate-bar" id="champBar">
+        <div class="wr-win" style="width:0%"></div>
+        <div class="wr-draw" style="width:0%"></div>
+        <div class="wr-loss" style="width:0%"></div>
+      </div>
+
+      <div class="tap-row">
+        <button class="tap-btn tap-win" data-mode="champions" data-result="W"><span class="ic">✓</span>Vittoria</button>
+        <button class="tap-btn tap-draw" data-mode="champions" data-result="D"><span class="ic">=</span>Pareggio</button>
+        <button class="tap-btn tap-loss" data-mode="champions" data-result="L"><span class="ic">✕</span>Sconfitta</button>
+      </div>
+
+      <div class="undo-row">
+        <button class="undo-btn" data-undo="champions" type="button">Annulla ultimo tap</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Storico giornaliero</p>
+      <div class="history" id="champHistory"></div>
+    </div>
+  </section>
+
+  <footer class="app-footer">
+    I dati restano <b>solo su questo browser/dispositivo</b> (localStorage) — non si sincronizzano altrove.
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var STORAGE_KEY = "futTracker.v1";
+
+  /* ---------- storage ---------- */
+  function loadData(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return { matches: [] };
+      var parsed = JSON.parse(raw);
+      if(!parsed || !Array.isArray(parsed.matches)) return { matches: [] };
+      return parsed;
+    }catch(e){
+      return { matches: [] };
+    }
+  }
+  function saveData(data){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+    catch(e){ showToast("Impossibile salvare (storage pieno o bloccato)"); }
+  }
+
+  var state = loadData();
+
+  /* ---------- helpers ---------- */
+  function todayKey(d){
+    d = d || new Date();
+    var y = d.getFullYear();
+    var m = String(d.getMonth()+1).padStart(2,"0");
+    var day = String(d.getDate()).padStart(2,"0");
+    return y+"-"+m+"-"+day;
+  }
+
+  // Settimana Rivals: lunedì -> domenica
+  function isoWeekKey(d){
+    var date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    var dayNum = (date.getUTCDay() + 6) % 7; // lunedì=0
+    date.setUTCDate(date.getUTCDate() - dayNum + 3);
+    var firstThursday = new Date(Date.UTC(date.getUTCFullYear(),0,4));
+    var week = 1 + Math.round(((date - firstThursday) / 86400000 - 3 + ((firstThursday.getUTCDay()+6)%7)) / 7);
+    return date.getUTCFullYear() + "-W" + String(week).padStart(2,"0");
+  }
+
+  // Weekend Champions: venerdì -> lunedì mattina, raggruppati sul venerdì di riferimento
+  function weekendKey(d){
+    var day = d.getDay(); // 0=domenica..6=sabato
+    var ref = new Date(d);
+    // giorni da sottrarre per tornare al venerdì di riferimento (ven=5)
+    var diff;
+    if(day === 5) diff = 0;
+    else if(day === 6) diff = 1;
+    else if(day === 0) diff = 2;
+    else if(day === 1) diff = 3; // lunedì mattina conta ancora nel weekend appena chiuso
+    else diff = null; // mar/mer/gio -> nessun weekend attivo, si aggancia al prossimo venerdì
+    if(diff === null){
+      // agganciato al venerdì successivo
+      var addDays = (5 - day + 7) % 7;
+      ref.setDate(ref.getDate() + addDays);
+    } else {
+      ref.setDate(ref.getDate() - diff);
+    }
+    return todayKey(ref);
+  }
+
+  function fmtDate(key){
+    var parts = key.split("-");
+    var d = new Date(parts[0], parts[1]-1, parts[2]);
+    var giorni = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
+    return d.getDate() + "/" + (d.getMonth()+1) + " · " + giorni[d.getDay()];
+  }
+
+  function showToast(msg){
+    var t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(showToast._tm);
+    showToast._tm = setTimeout(function(){ t.classList.remove("show"); }, 1600);
+  }
+
+  /* ---------- data ops ---------- */
+  function addMatch(mode, result){
+    var now = new Date();
+    state.matches.push({
+      mode: mode,
+      result: result,
+      day: todayKey(now),
+      period: mode === "rivals" ? isoWeekKey(now) : weekendKey(now),
+      ts: now.getTime()
+    });
+    saveData(state);
+    render();
+    var label = result === "W" ? "Vittoria" : (result === "D" ? "Pareggio" : "Sconfitta");
+    showToast(label + " registrata");
+  }
+
+  function undoLast(mode){
+    for(var i = state.matches.length - 1; i >= 0; i--){
+      if(state.matches[i].mode === mode){
+        state.matches.splice(i,1);
+        saveData(state);
+        render();
+        showToast("Ultimo tap annullato");
+        return;
+      }
+    }
+    showToast("Niente da annullare");
+  }
+
+  function resetAll(){
+    state = { matches: [] };
+    saveData(state);
+    render();
+    showToast("Storico azzerato");
+  }
+
+  /* ---------- render ---------- */
+  function computeStats(mode, period){
+    var w=0,d=0,l=0;
+    state.matches.forEach(function(m){
+      if(m.mode === mode && m.period === period){
+        if(m.result === "W") w++;
+        else if(m.result === "D") d++;
+        else if(m.result === "L") l++;
+      }
+    });
+    return {w:w,d:d,l:l,tot:w+d+l};
+  }
+
+  function renderBar(elId, s){
+    var el = document.getElementById(elId);
+    var divs = el.children;
+    if(s.tot === 0){
+      divs[0].style.width = "0%";
+      divs[1].style.width = "0%";
+      divs[2].style.width = "0%";
+      return;
+    }
+    divs[0].style.width = (s.w/s.tot*100) + "%";
+    divs[1].style.width = (s.d/s.tot*100) + "%";
+    divs[2].style.width = (s.l/s.tot*100) + "%";
+  }
+
+  function renderHistory(containerId, mode){
+    var container = document.getElementById(containerId);
+    var byDay = {};
+    state.matches.forEach(function(m){
+      if(m.mode !== mode) return;
+      if(!byDay[m.day]) byDay[m.day] = [];
+      byDay[m.day].push(m.result);
+    });
+    var days = Object.keys(byDay).sort().reverse();
+    if(days.length === 0){
+      container.innerHTML = '<div class="empty">Nessuna partita registrata ancora</div>';
+      return;
+    }
+    container.innerHTML = days.slice(0,30).map(function(day){
+      var results = byDay[day];
+      var w = results.filter(function(r){return r==="W";}).length;
+      var d = results.filter(function(r){return r==="D";}).length;
+      var l = results.filter(function(r){return r==="L";}).length;
+      var pills = results.map(function(r){
+        var cls = r === "W" ? "w" : (r === "D" ? "d" : "l");
+        return '<div class="pill '+cls+'">'+r+'</div>';
+      }).join("");
+      return '<div class="day"><div class="date">'+fmtDate(day)+
+             '<small>'+w+'V '+d+'P '+l+'S</small></div>' +
+             '<div class="pills">'+pills+'</div></div>';
+    }).join("");
+  }
+
+  function render(){
+    var now = new Date();
+    var rWeek = isoWeekKey(now);
+    var cWeekend = weekendKey(now);
+
+    document.getElementById("rivalsWeekLabel").textContent = rWeek;
+    document.getElementById("champWeekendLabel").textContent = fmtDate(cWeekend);
+
+    var rs = computeStats("rivals", rWeek);
+    document.getElementById("rivalsW").textContent = rs.w;
+    document.getElementById("rivalsD").textContent = rs.d;
+    document.getElementById("rivalsL").textContent = rs.l;
+    renderBar("rivalsBar", rs);
+    renderHistory("rivalsHistory", "rivals");
+
+    var cs = computeStats("champions", cWeekend);
+    document.getElementById("champW").textContent = cs.w;
+    document.getElementById("champD").textContent = cs.d;
+    document.getElementById("champL").textContent = cs.l;
+    renderBar("champBar", cs);
+    renderHistory("champHistory", "champions");
+  }
+
+  /* ---------- events ---------- */
+  document.querySelectorAll(".tap-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      addMatch(btn.getAttribute("data-mode"), btn.getAttribute("data-result"));
+    });
+  });
+
+  document.querySelectorAll("[data-undo]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      undoLast(btn.getAttribute("data-undo"));
+    });
+  });
+
+  document.querySelectorAll(".tab").forEach(function(tab){
+    tab.addEventListener("click", function(){
+      document.querySelectorAll(".tab").forEach(function(t){ t.classList.remove("active"); });
+      document.querySelectorAll(".panel").forEach(function(p){ p.classList.remove("active"); });
+      tab.classList.add("active");
+      document.getElementById("panel-" + tab.getAttribute("data-mode")).classList.add("active");
+    });
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    if(window.confirm("Azzerare tutto lo storico salvato su questo dispositivo? L'operazione non è reversibile.")){
+      resetAll();
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
