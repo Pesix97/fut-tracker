@@ -31,9 +31,9 @@ Tutto lo storico è un unico oggetto in `localStorage` sotto la chiave
 - `ts`: timestamp, usato per l'ordine e per "annulla ultimo tap"
 
 Nessuna dipendenza esterna a parte i Google Fonts (Rajdhani + Inter) caricati via
-`<link>`. L'unica chiamata di rete è quella, opzionale, verso l'API di Claude
-per la lettura degli screenshot (vedi sotto) — nessun tracking, nessun'altra
-chiamata.
+`<link>`. Nessuna chiamata di rete, nessun tracking (era stata introdotta una
+chiamata all'API di Claude per la lettura degli screenshot, poi rimossa — vedi
+sotto).
 
 **Limite noto e voluto:** essendo `localStorage`, i dati non si sincronizzano tra
 browser o dispositivi diversi. Va bene per un tabellone personale rapido; se in
@@ -48,35 +48,35 @@ le statistiche "correnti") e mostra fino alle ultime 12 righe, più recenti in
 cima, con la barra W/D/L e il periodo attuale evidenziato. Nessun nuovo campo
 dati: usa lo stesso schema già salvato in `localStorage`.
 
-## Lettura screenshot via Claude API — idea principale dell'app
+## Lettura screenshot via Claude API — provata e rimossa (16/09/2026)
 
-Pensata per l'uso da telefono, subito dopo la partita: tap su "📷 Leggi da
-screenshot" apre la fotocamera (o il file picker su desktop, non è bloccato ma
-il flusso è disegnato per il mobile), l'immagine viene inviata al modello
-`claude-haiku-4-5-20251001` con un prompt che chiede di rispondere solo con
-`VICTORY` / `DRAW` / `DEFEAT` / `UNKNOWN`, e il risultato viene proposto con un
-tap di conferma — mai inserito automaticamente senza controllo.
+Era l'idea principale dell'app: tap su "📷 Leggi da screenshot", immagine
+inviata al modello `claude-haiku-4-5-20251001` via `fetch()` diretto dal
+browser a `https://api.anthropic.com/v1/messages` (header
+`anthropic-dangerous-direct-browser-access: true`, chiave personale salvata
+solo in `localStorage`), risultato proposto con un tap di conferma.
 
-**Chiamata diretta dal browser, senza backend.** La richiesta va da
-`fetch()` direttamente a `https://api.anthropic.com/v1/messages`, con l'header
-`anthropic-dangerous-direct-browser-access: true` che Anthropic richiede
-apposta per questo caso d'uso. La documentazione ufficiale sconsiglia le
-chiamate dirette da browser **in produzione multi-utente**, perché la chiave
-sarebbe visibile a chiunque ispezioni il traffico del sito. Qui la situazione è
-diversa: è un'app a singolo utente (solo Peppe), la chiave è quella personale
-dell'utente stesso, inserita e salvata solo nel suo `localStorage`, e non
-transita mai da un server terzo (nemmeno da me). Per questo caso — un file
-statico, un solo utilizzatore, nessun backend possibile su GitHub Pages — è il
-compromesso scelto consapevolmente, non una svista. Se in futuro l'app dovesse
-avere più utenti o girare su un dominio condiviso, andrebbe rivista con un vero
-backend/proxy che nasconda la chiave.
+Implementata e funzionante, poi **rimossa su richiesta esplicita**: richiede
+una chiave API Anthropic a consumo, e per ora si preferisce restare sul tap
+manuale, senza costi. Il codice non è più nel repository (rimosso nel commit
+successivo alla v2) — si può recuperare dallo storico Git se servisse
+reintrodurla.
 
-**Perché niente conferma automatica silenziosa:** un modello vision può
-sbagliare lettura (schermata poco chiara, lingua diversa, foto storta). Il tap
-di conferma resta sempre un passaggio umano — lo screenshot velocizza
-l'inserimento, non lo sostituisce del tutto.
+**Se in futuro si volesse automatizzare la lettura senza spesa**, l'alternativa
+è OCR client-side con **Tesseract.js**: gira interamente nel browser, nessuna
+chiave, nessun costo, nessuna chiamata di rete. Il compromesso è
+l'affidabilità: un OCR generico legge peggio di un modello vision su schermate
+con glow, filtri colore o testo in font stilizzati tipici di EA FC — andrebbe
+provato sul serio prima di fidarcisi, mentre un token registra sempre esatto.
+Da valutare se il tap manuale dovesse diventare scomodo con volumi alti di
+partite.
 
-**Costo:** a carico dell'utente sulla propria chiave Anthropic, non
-dell'app/del repository. `claude-haiku-4-5-20251001` è stato scelto perché è
-il modello vision più economico disponibile per un compito così semplice
-(classificazione in una parola).
+## Idea futura: dati di partita oltre al risultato
+
+Oltre a V/P/S, si è parlato di registrare anche le statistiche della singola
+partita (tiri, passaggi, contrasti ecc.), probabilmente con inserimento
+manuale via un piccolo form invece che un tap singolo. Non ancora progettata:
+va pensata la UI (un form per partita è più lento di un tap, quindi va capito
+quanto dettaglio serve davvero) e se aggiungerla come dato opzionale per
+partita nello stesso `localStorage.futTracker.v1`, senza appesantire il flusso
+rapido attuale per chi vuole solo il risultato.
