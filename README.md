@@ -19,6 +19,18 @@ App live: https://pesix97.github.io/fut-tracker/
 6. La card "Confronto settimane" (Rivals) / "Confronto weekend" (FUT Champions)
    mostra fino alle ultime 12 settimane/weekend a confronto, con la settimana in
    corso evidenziata.
+7. "+ Aggiungi" nello "Storico partite dettagliato" apre un form dove inserisci
+   il punteggio (obbligatorio — da lì l'app calcola da sola Vittoria/Pareggio/
+   Sconfitta) e tutte le statistiche della schermata di fine partita che vuoi
+   tracciare (possesso, tiri, xG, passaggi, contrasti, parate, falli, cartellini,
+   più le tre percentuali di dribbling/tiro/passaggio) — tutto opzionale tranne
+   il punteggio. Ogni partita inserita così diventa una card cliccabile: in
+   anteprima vedi data e punteggio, toccandola si apre la tabella completa.
+
+**Giorno di gioco:** una partita giocata dopo mezzanotte ma prima delle 5:00 del
+mattino conta ancora come il giorno precedente (storico giornaliero, settimana
+Rivals e weekend Champions inclusi) — pensato per chi gioca a cavallo della
+mezzanotte.
 
 **Importante:** i dati vivono in `localStorage`, cioè restano solo sul browser e
 dispositivo con cui li inserisci. Non c'è sincronizzazione tra telefono e PC, né
@@ -33,8 +45,13 @@ backup automatico — vedi `NOTES.md` per il perché di questa scelta.
 - [~] lettura risultato da screenshot via Claude API — provata e poi rimossa
       (richiedeva una chiave API a pagamento); vedi `NOTES.md` per i dettagli e
       le alternative valutate
-- [ ] idea futura: inserimento manuale dei dati di partita (tiri, passaggi,
-      contrasti ecc.), non solo il risultato — vedi `NOTES.md`
+- [x] v3 — inserimento manuale delle statistiche di partita (form con punteggio
+      + tabella completa), storico partite dettagliato con card cliccabili,
+      giorno di gioco esteso fino alle 5:00
+- [ ] prossimo passo: lettura automatica della tabella statistiche da uno
+      screenshot della schermata "SUMMARY" di fine partita, per pre-compilare
+      questo stesso form — vedi `NOTES.md` (in corso, verificata la fattibilità
+      con un test OCR reale)
 
 ## Struttura del progetto
 

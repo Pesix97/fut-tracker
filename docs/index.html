@@ -152,6 +152,18 @@
     text-transform:none;
     letter-spacing:0;
   }
+  .card-title .add-link{
+    background:rgba(0,255,133,0.1);
+    border:1px solid rgba(0,255,133,0.3);
+    color:var(--accent);
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:11px;
+    text-transform:none;
+    letter-spacing:0;
+    font-weight:700;
+  }
+  .card-title .add-link:active{background:rgba(0,255,133,0.18);}
 
   .stat-row{
     display:flex;
@@ -338,6 +350,201 @@
     padding:18px 0 6px;
   }
 
+  /* --- storico partite dettagliato --- */
+  .match-card{
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  .match-card + .match-card{margin-top:8px;}
+  .match-card-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:12px 14px;
+  }
+  .match-card-head .mc-date{
+    font-size:11.5px;
+    color:var(--text-dim);
+    flex:1;
+  }
+  .match-card-head .mc-date b{
+    display:block;
+    color:var(--text);
+    font-size:12.5px;
+    font-weight:600;
+  }
+  .mc-score{
+    font-family:'Rajdhani',sans-serif;
+    font-weight:700;
+    font-size:18px;
+    padding:4px 10px;
+    border-radius:8px;
+  }
+  .mc-score.res-w{background:rgba(0,255,133,0.12); color:var(--win);}
+  .mc-score.res-d{background:rgba(255,209,102,0.12); color:var(--draw);}
+  .mc-score.res-l{background:rgba(255,92,114,0.12); color:var(--loss);}
+  .mc-chevron{
+    color:var(--text-dim);
+    font-size:16px;
+    transition:transform .15s;
+  }
+  .match-card.open .mc-chevron{transform:rotate(90deg);}
+  .match-card-body{
+    display:none;
+    padding:4px 14px 14px;
+    border-top:1px solid var(--border);
+  }
+  .match-card.open .match-card-body{display:block;}
+  .stat-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+    font-size:12px;
+  }
+  .stat-table td{
+    padding:6px 4px;
+    border-bottom:1px solid var(--border);
+  }
+  .stat-table td:first-child{
+    text-align:right;
+    font-weight:700;
+    width:22%;
+    color:var(--text);
+  }
+  .stat-table td:nth-child(2){
+    text-align:center;
+    color:var(--text-dim);
+    font-size:11px;
+  }
+  .stat-table td:last-child{
+    text-align:left;
+    font-weight:700;
+    width:22%;
+    color:var(--text);
+  }
+  .stat-table tr:last-child td{border-bottom:none;}
+  .stat-table tr.ring-row td:first-child,
+  .stat-table tr.ring-row td:last-child{color:var(--gold);}
+
+  /* --- modale generico --- */
+  .modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(4,8,18,0.72);
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+    z-index:100;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-box{
+    width:100%;
+    max-width:520px;
+    max-height:88vh;
+    overflow-y:auto;
+    background:linear-gradient(180deg,var(--card-2),var(--card));
+    border:1px solid var(--border);
+    border-radius:20px 20px 0 0;
+    padding:20px 18px calc(20px + env(safe-area-inset-bottom));
+    box-shadow:0 -10px 40px rgba(0,0,0,0.5);
+  }
+  .modal-box h2{
+    font-family:'Rajdhani',sans-serif;
+    font-size:18px;
+    margin:0 0 4px;
+  }
+  .modal-sub{
+    font-size:11.5px;
+    color:var(--text-dim);
+    margin:0 0 16px;
+  }
+  .score-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    margin-bottom:18px;
+  }
+  .score-row input{
+    width:64px;
+    text-align:center;
+    font-family:'Rajdhani',sans-serif;
+    font-size:26px;
+    font-weight:700;
+    background:rgba(255,255,255,0.05);
+    border:1px solid var(--border);
+    color:var(--text);
+    border-radius:12px;
+    padding:8px 0;
+  }
+  .score-row span{
+    font-family:'Rajdhani',sans-serif;
+    font-size:22px;
+    color:var(--text-dim);
+    font-weight:700;
+  }
+  .form-section-title{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+    color:var(--text-dim);
+    margin:16px 0 8px;
+  }
+  .form-grid{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .form-row{
+    display:grid;
+    grid-template-columns:1fr 52px 52px;
+    align-items:center;
+    gap:8px;
+  }
+  .form-row label{
+    font-size:12px;
+    color:var(--text-dim);
+  }
+  .form-row input{
+    width:100%;
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--border);
+    color:var(--text);
+    text-align:center;
+    padding:8px 2px;
+    border-radius:8px;
+    font-size:13px;
+  }
+  .form-col-hdr{
+    display:grid;
+    grid-template-columns:1fr 52px 52px;
+    font-size:9.5px;
+    text-transform:uppercase;
+    letter-spacing:0.4px;
+    color:var(--text-dim);
+    margin-bottom:4px;
+  }
+  .form-col-hdr span:nth-child(2), .form-col-hdr span:nth-child(3){text-align:center;}
+  .modal-actions{
+    display:flex;
+    gap:8px;
+    margin-top:20px;
+  }
+  .modal-actions button{
+    flex:1;
+    padding:13px;
+    border-radius:10px;
+    font-family:'Rajdhani',sans-serif;
+    font-weight:700;
+    font-size:14px;
+    border:none;
+  }
+  #matchSave{background:var(--accent); color:#06110a;}
+  #matchCancel{background:rgba(255,255,255,0.06); color:var(--text-dim);}
+
   footer.app-footer{
     text-align:center;
     color:var(--text-dim);
@@ -423,6 +630,11 @@
     </div>
 
     <div class="card">
+      <p class="card-title">Storico partite dettagliato <button class="add-link" data-add="rivals" type="button">+ Aggiungi</button></p>
+      <div class="history" id="rivalsDetailed"></div>
+    </div>
+
+    <div class="card">
       <p class="card-title">Storico giornaliero</p>
       <div class="history" id="rivalsHistory"></div>
     </div>
@@ -462,6 +674,11 @@
     </div>
 
     <div class="card">
+      <p class="card-title">Storico partite dettagliato <button class="add-link" data-add="champions" type="button">+ Aggiungi</button></p>
+      <div class="history" id="champDetailed"></div>
+    </div>
+
+    <div class="card">
       <p class="card-title">Storico giornaliero</p>
       <div class="history" id="champHistory"></div>
     </div>
@@ -469,16 +686,67 @@
 
   <footer class="app-footer">
     I dati restano <b>solo su questo browser/dispositivo</b> (localStorage) — non si sincronizzano altrove.
+    Il "giorno di gioco" finisce alle 5:00 del mattino: quello che giochi dopo mezzanotte
+    conta ancora come il giorno prima.
   </footer>
 </div>
 
 <div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="matchModal">
+  <div class="modal-box">
+    <h2>Nuova partita dettagliata — <span id="matchModalMode"></span></h2>
+    <p class="modal-sub">Inserisci il punteggio (obbligatorio) e tutte le statistiche che hai a disposizione — il resto puoi lasciarlo vuoto.</p>
+
+    <div class="score-row">
+      <input type="number" id="scoreFor" inputmode="numeric" min="0" placeholder="0">
+      <span>—</span>
+      <input type="number" id="scoreAgainst" inputmode="numeric" min="0" placeholder="0">
+    </div>
+
+    <p class="form-section-title">Statistiche partita</p>
+    <div class="form-col-hdr"><span></span><span>Tu</span><span>Avv.</span></div>
+    <div class="form-grid" id="statFieldsGrid"></div>
+
+    <p class="form-section-title">Percentuali</p>
+    <div class="form-col-hdr"><span></span><span>Tu</span><span>Avv.</span></div>
+    <div class="form-grid" id="ringFieldsGrid"></div>
+
+    <div class="modal-actions">
+      <button id="matchSave" type="button">Salva partita</button>
+      <button id="matchCancel" type="button">Annulla</button>
+    </div>
+  </div>
+</div>
 
 <script>
 (function(){
   "use strict";
 
   var STORAGE_KEY = "futTracker.v1";
+
+  var STAT_FIELDS = [
+    { key:"possession", label:"Possesso %" },
+    { key:"shots", label:"Tiri" },
+    { key:"xg", label:"Gol Attesi (xG)" },
+    { key:"passes", label:"Passaggi" },
+    { key:"tackles", label:"Contrasti" },
+    { key:"tacklesWon", label:"Contrasti Vinti" },
+    { key:"interceptions", label:"Intercetti" },
+    { key:"saves", label:"Parate" },
+    { key:"fouls", label:"Falli Commessi" },
+    { key:"offsides", label:"Fuorigioco" },
+    { key:"corners", label:"Corner" },
+    { key:"freeKicks", label:"Punizioni" },
+    { key:"penalties", label:"Rigori" },
+    { key:"yellowCards", label:"Cartellini Gialli" },
+    { key:"redCards", label:"Cartellini Rossi" }
+  ];
+  var RING_FIELDS = [
+    { key:"dribbleSuccess", label:"Dribbling Riuscito %" },
+    { key:"shotAccuracy", label:"Precisione Tiri %" },
+    { key:"passAccuracy", label:"Precisione Passaggi %" }
+  ];
 
   /* ---------- storage ---------- */
   function loadData(){
@@ -499,7 +767,18 @@
 
   var state = loadData();
 
-  /* ---------- helpers ---------- */
+  /* ---------- helpers data/ora ---------- */
+
+  // "Giorno di gioco": tutto quello che avviene prima delle 5:00 conta ancora come il giorno precedente
+  function gamingNow(d){
+    d = d || new Date();
+    var adjusted = new Date(d.getTime());
+    if(d.getHours() < 5){
+      adjusted.setDate(adjusted.getDate() - 1);
+    }
+    return adjusted;
+  }
+
   function todayKey(d){
     d = d || new Date();
     var y = d.getFullYear();
@@ -558,15 +837,18 @@
   }
 
   /* ---------- data ops ---------- */
-  function addMatch(mode, result){
-    var now = new Date();
-    state.matches.push({
+  function addMatch(mode, result, stats){
+    var real = new Date();
+    var gaming = gamingNow(real);
+    var match = {
       mode: mode,
       result: result,
-      day: todayKey(now),
-      period: mode === "rivals" ? isoWeekKey(now) : weekendKey(now),
-      ts: now.getTime()
-    });
+      day: todayKey(gaming),
+      period: mode === "rivals" ? isoWeekKey(gaming) : weekendKey(gaming),
+      ts: real.getTime()
+    };
+    if(stats) match.stats = stats;
+    state.matches.push(match);
     saveData(state);
     render();
     var label = result === "W" ? "Vittoria" : (result === "D" ? "Pareggio" : "Sconfitta");
@@ -693,8 +975,55 @@
     }).join("");
   }
 
+  /* ---------- render: storico partite dettagliato ---------- */
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function statRowsHtml(stats){
+    var rows = STAT_FIELDS.map(function(f){
+      var v = stats[f.key] || [null,null];
+      return '<tr><td>'+(v[0]==null?"—":escapeHtml(v[0]))+'</td><td>'+escapeHtml(f.label)+'</td><td>'+(v[1]==null?"—":escapeHtml(v[1]))+'</td></tr>';
+    }).join("");
+    var ringRows = RING_FIELDS.map(function(f){
+      var v = stats[f.key] || [null,null];
+      return '<tr class="ring-row"><td>'+(v[0]==null?"—":escapeHtml(v[0])+"%")+'</td><td>'+escapeHtml(f.label)+'</td><td>'+(v[1]==null?"—":escapeHtml(v[1])+"%")+'</td></tr>';
+    }).join("");
+    return '<table class="stat-table">'+rows+ringRows+'</table>';
+  }
+
+  function renderDetailed(containerId, mode){
+    var container = document.getElementById(containerId);
+    var list = state.matches
+      .map(function(m, idx){ return {m:m, idx:idx}; })
+      .filter(function(x){ return x.m.mode === mode && x.m.stats; })
+      .sort(function(a,b){ return b.m.ts - a.m.ts; });
+
+    if(list.length === 0){
+      container.innerHTML = '<div class="empty">Nessuna partita dettagliata ancora — tocca "+ Aggiungi"</div>';
+      return;
+    }
+
+    container.innerHTML = list.map(function(x){
+      var m = x.m;
+      var s = m.stats;
+      var resCls = m.result === "W" ? "res-w" : (m.result === "D" ? "res-d" : "res-l");
+      return '<div class="match-card" data-ts="'+m.ts+'">' +
+        '<div class="match-card-head" data-toggle="'+m.ts+'">' +
+          '<div class="mc-date"><b>'+fmtDate(m.day)+'</b>'+ (mode==="rivals" ? m.period : "") +'</div>' +
+          '<div class="mc-score '+resCls+'">'+s.scoreFor+' – '+s.scoreAgainst+'</div>' +
+          '<div class="mc-chevron">›</div>' +
+        '</div>' +
+        '<div class="match-card-body">'+statRowsHtml(s)+'</div>' +
+      '</div>';
+    }).join("");
+  }
+
   function render(){
-    var now = new Date();
+    var real = new Date();
+    var now = gamingNow(real);
     var rWeek = isoWeekKey(now);
     var cWeekend = weekendKey(now);
 
@@ -707,6 +1036,7 @@
     document.getElementById("rivalsL").textContent = rs.l;
     renderBar("rivalsBar", rs);
     renderComparison("rivalsComparison", "rivals", rWeek);
+    renderDetailed("rivalsDetailed", "rivals");
     renderHistory("rivalsHistory", "rivals");
 
     var cs = computeStats("champions", cWeekend);
@@ -715,8 +1045,79 @@
     document.getElementById("champL").textContent = cs.l;
     renderBar("champBar", cs);
     renderComparison("champComparison", "champions", cWeekend);
+    renderDetailed("champDetailed", "champions");
     renderHistory("champHistory", "champions");
   }
+
+  /* ---------- modale nuova partita dettagliata ---------- */
+  var matchModal = document.getElementById("matchModal");
+  var currentAddMode = "rivals";
+
+  function buildFormGrid(gridEl, fields){
+    gridEl.innerHTML = fields.map(function(f){
+      return '<div class="form-row"><label>'+f.label+'</label>' +
+        '<input type="number" inputmode="decimal" id="stat-'+f.key+'-for" step="any">' +
+        '<input type="number" inputmode="decimal" id="stat-'+f.key+'-against" step="any"></div>';
+    }).join("");
+  }
+  buildFormGrid(document.getElementById("statFieldsGrid"), STAT_FIELDS);
+  buildFormGrid(document.getElementById("ringFieldsGrid"), RING_FIELDS);
+
+  function openMatchModal(mode){
+    currentAddMode = mode;
+    document.getElementById("matchModalMode").textContent = mode === "rivals" ? "Rivals" : "FUT Champions";
+    document.getElementById("scoreFor").value = "";
+    document.getElementById("scoreAgainst").value = "";
+    STAT_FIELDS.concat(RING_FIELDS).forEach(function(f){
+      document.getElementById("stat-"+f.key+"-for").value = "";
+      document.getElementById("stat-"+f.key+"-against").value = "";
+    });
+    matchModal.classList.add("show");
+  }
+  function closeMatchModal(){
+    matchModal.classList.remove("show");
+  }
+
+  function numOrNull(id){
+    var v = document.getElementById(id).value;
+    if(v === "" || v === null) return null;
+    var n = Number(v);
+    return isNaN(n) ? null : n;
+  }
+
+  document.getElementById("matchCancel").addEventListener("click", closeMatchModal);
+  matchModal.addEventListener("click", function(e){
+    if(e.target === matchModal) closeMatchModal();
+  });
+
+  document.getElementById("matchSave").addEventListener("click", function(){
+    var sf = numOrNull("scoreFor");
+    var sa = numOrNull("scoreAgainst");
+    if(sf === null || sa === null){
+      showToast("Inserisci il punteggio");
+      return;
+    }
+    var result = sf > sa ? "W" : (sf < sa ? "L" : "D");
+    var stats = { scoreFor: sf, scoreAgainst: sa };
+    STAT_FIELDS.concat(RING_FIELDS).forEach(function(f){
+      stats[f.key] = [numOrNull("stat-"+f.key+"-for"), numOrNull("stat-"+f.key+"-against")];
+    });
+    addMatch(currentAddMode, result, stats);
+    closeMatchModal();
+  });
+
+  document.querySelectorAll("[data-add]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      openMatchModal(btn.getAttribute("data-add"));
+    });
+  });
+
+  document.addEventListener("click", function(e){
+    var head = e.target.closest("[data-toggle]");
+    if(head){
+      head.closest(".match-card").classList.toggle("open");
+    }
+  });
 
   /* ---------- events ---------- */
   document.querySelectorAll(".tap-btn").forEach(function(btn){

@@ -71,12 +71,73 @@ provato sul serio prima di fidarcisi, mentre un token registra sempre esatto.
 Da valutare se il tap manuale dovesse diventare scomodo con volumi alti di
 partite.
 
-## Idea futura: dati di partita oltre al risultato
+## v3 — statistiche di partita: form manuale + storico dettagliato (16/09/2026)
 
-Oltre a V/P/S, si è parlato di registrare anche le statistiche della singola
-partita (tiri, passaggi, contrasti ecc.), probabilmente con inserimento
-manuale via un piccolo form invece che un tap singolo. Non ancora progettata:
-va pensata la UI (un form per partita è più lento di un tap, quindi va capito
-quanto dettaglio serve davvero) e se aggiungerla come dato opzionale per
-partita nello stesso `localStorage.futTracker.v1`, senza appesantire il flusso
-rapido attuale per chi vuole solo il risultato.
+Implementato l'inserimento delle statistiche della schermata "SUMMARY" di fine
+partita (quella con possesso, tiri, xG, passaggi, contrasti, parate, falli,
+cartellini più le tre percentuali a cerchio di dribbling/tiro/passaggio).
+
+**Schema dati:** ogni partita in `state.matches` può avere un campo opzionale
+`stats`: `{ scoreFor, scoreAgainst, possession:[tu,avv], shots:[tu,avv], ... }`
+— un array `[tu, avversario]` per ogni statistica, più i due punteggi. Il
+risultato (V/P/S) non si inserisce a parte: si calcola dal confronto
+`scoreFor`/`scoreAgainst`, così non può mai essere in contraddizione con il
+punteggio. Le partite con `stats` restano comunque dentro lo stesso array
+`matches` usato dai tap semplici — contano regolarmente nei contatori
+settimana/weekend e nel confronto tra periodi, e in più alimentano una sezione
+a parte, "Storico partite dettagliato": una card per partita, cliccabile,
+anteprima con data e punteggio, tap per aprire la tabella completa. Tutti i
+campi statistica sono opzionali (solo il punteggio è obbligatorio) — un campo
+lasciato vuoto si mostra come "—", non blocca il salvataggio.
+
+**Perché il form manuale prima della lettura automatica:** è la base su cui si
+aggancerà la lettura da screenshot (vedi sotto) — lo stesso form, semplicemente
+pre-compilato invece che vuoto — ma è già uno strumento completo e funzionante
+da solo, coerente con l'alternativa "a mano" discussa quando si è deciso di
+togliere la lettura via Claude API.
+
+**Giorno di gioco fino alle 5:00.** Peppe può giocare a cavallo della
+mezzanotte; senza correzione, una partita delle 01:00 finirebbe nel giorno
+sbagliato (storico giornaliero, settimana Rivals, weekend Champions). Aggiunta
+`gamingNow()`: se l'ora locale è prima delle 5:00, si usa il giorno precedente
+per calcolare `day` e `period`. Non tocca `ts` (resta il timestamp reale, usato
+solo per l'ordinamento).
+
+## In corso: lettura automatica da screenshot (calibrazione in attesa)
+
+Confermato con Peppe: ogni screenshot genera una partita **autosufficiente**
+(non serve un tap precedente da agganciare — ambiguo con più vittorie nello
+stesso giorno), caricato sempre lo stesso giorno in cui si gioca (niente
+selettore data), schermata di riferimento è sempre e solo la tab "SUMMARY"
+della schermata di fine partita.
+
+**Test OCR fatto su uno screenshot reale (di esempio, non ancora quello di
+Peppe — in attesa)**, con Tesseract (motore di `Tesseract.js`, testato qui
+lato server solo per validare l'approccio prima di implementarlo nel browser):
+
+- La tabella centrale (15 righe, 30 numeri) si legge quasi perfettamente con
+  un ritaglio dell'area tabella + ingrandimento 3x: **29 valori su 30 esatti**
+  in un solo test. Gratis, nessuna chiave, nessuna chiamata di rete.
+- Le 3 percentuali per lato dentro i cerchietti (dribbling/tiro/passaggio,
+  6 numeri totali) **non si leggono in modo affidabile**, nemmeno dopo vari
+  tentativi di ritaglio più preciso e binarizzazione: il numero dentro
+  l'anello colorato confonde ripetutamente il motore OCR. Per questi 6 numeri
+  resta l'inserimento a mano nel form (già pronto, vedi sopra).
+
+**Da fare quando arriva lo screenshot vero di Peppe:**
+1. Calibrare le coordinate di ritaglio in **percentuale** (non pixel fissi),
+   così funzionano a qualunque risoluzione 16:9 — i suoi screenshot sono
+   sempre catture dirette dalla console, mai foto allo schermo, quindi il
+   layout resta sempre identico.
+2. Integrare `Tesseract.js` (libreria + WASM + dati lingua, caricati da CDN al
+   primo utilizzo, poi in cache) — è una dipendenza esterna vera e propria,
+   diversa dalla chiamata `fetch` leggera della versione Claude API: va
+   documentata come tale quando la aggiungiamo.
+3. Il flusso finale: carica screenshot → OCR sulla tabella (pre-compila il
+   form) → i 3×2 valori dei cerchietti restano da inserire a mano → stessa
+   schermata di verifica del form manuale, editabile, prima di salvare.
+
+**Perché tutto questo:** i dati raccolti (con o senza OCR) sono pensati come
+base per analisi e consigli di gioco futuri, non solo come archivio — da qui
+l'importanza di uno schema pulito fin da subito, anche prima che l'analisi
+vera e propria venga costruita.
